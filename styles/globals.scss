@@ -1,0 +1,239 @@
+@import "./import.css";
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #0A1E42;
+}
+
+.layout-bg {
+  min-height: 100vh;
+  background: #F4F7FF;
+}
+
+button {
+  user-select: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.submenu-button {
+  .submenu-item {
+    display: none;
+  }
+
+  &:hover {
+    .submenu-item {
+      display: block;
+    }
+  }
+}
+
+.guest-portal-page {
+  padding: 88px 20px 20px;
+}
+
+@media (max-width: 420px) {
+  .list-card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-wrap: nowrap;
+
+    .card-in-my-card {
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .guest-portal-page {
+    padding: 0 20px 12px 270px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .box-stage-open-buy {
+    grid-template-rows: auto;
+    grid-template-columns: none;
+  }
+
+  .box-stage-card {
+    display: grid;
+    justify-content: center;
+
+    .box-stage-card-list {
+      display: grid;
+      gap: 2px 40px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-content: space-between;
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .guest-portal-page {
+    padding: 0 60px 12px 302px;
+  }
+}
+
+.legendary-type {
+  background: linear-gradient(180deg, #EDD513 0%, #F49D2C 100%);
+}
+
+.epic-type {
+  background: linear-gradient(180deg, #E34DB1 0%, #DC26D7 100%);
+}
+
+.rare-type {
+  background: linear-gradient(180deg, #02498B 0%, #012558 100%);
+}
+
+.uncommon-type {
+  background: linear-gradient(180deg, #56AA2E 0%, #8DCD52 100%);
+}
+
+.common-type {
+  background: linear-gradient(180deg, #06BEB6 0%, #42B2BE 100%);
+}
+
+.box-sold {
+  background: linear-gradient(111.96deg, #6681FF 14.37%, #2152CB 85.63%);
+}
+
+.lucky-box-bg-light {
+  background-image: url('/images/luckybox/lucky_box_bg_light.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: #002464;
+}
+
+.coundown-box-bg {
+  background-image: url('/images/luckybox/coundown_box_bg.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: #0A1E42;
+}
+
+.coundown-bg {
+  background-image: url('/images/luckybox/coundown_bg.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: #0A1E42;
+}
+
+.card-open {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0) scale(0);
+  transform-origin: bottom center;
+  transition: 0.5s linear;
+  bottom: calc(50% - 200px);
+}
+
+.popup-card-open {
+  opacity: 1;
+  transform: rotateY(0) scale(1);
+  transform-style: preserve-3d;
+  animation: animationCardOpen 0.8s linear;
+}
+
+.father-popup-card {
+  perspective: 1000px;
+}
+
+@keyframes animationCardOpen {
+  from {
+    opacity: 0;
+    transform: rotateY(90deg) scale(0.1);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+  }
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  background-color: #fff;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba($color: #000000, $alpha: 0.2);
+  border-radius: 5px;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  font-family: FontAwesome;
+  content: "\f00c";
+  width: -0.35em;
+  height: -0.35em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+}
+
+input[type="checkbox"]:checked {
+  border: 1.5px solid rgba($color: #000000, $alpha: 1);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.card_nft:hover {
+  .card_nft_item {
+    display: flex;
+  }
+}
+
+.toast-animation {
+  height: 0px;
+  padding: 0;
+  overflow: hidden;
+  animation: toastAnimation 5s linear;
+}
+
+@keyframes toastAnimation {
+  0% {
+    height: 0px;
+    padding: 0;
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  3% {
+    height: fit-content;
+    padding: 12px 32px;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  97% {
+    height: fit-content;
+    padding: 12px 32px;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  100% {
+    height: 0px;
+    padding: 0;
+    display: block;
+    width: fit-content;
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
