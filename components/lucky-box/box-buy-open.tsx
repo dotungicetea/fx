@@ -1,20 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { getBoxesText } from "@/utils";
+import { BoxBuyOpenType } from "@/types/lucky-box";
+import { getBoxesText, getNumberFormatUs } from "@/utils";
 import clsx from "clsx";
 import Image from "next/image";
 import { useMemo } from "react";
-
-interface Props {
-  isOpen?: boolean;
-  data?: any;
-  numberBox: any;
-  handleNumBox: any;
-  disabled?: boolean;
-  loading?: boolean;
-  isBoxOpen?: boolean;
-  isWaiting?: boolean;
-  actionPopup?: () => void;
-}
 
 const BoxBuyOpen = ({
   isOpen,
@@ -26,7 +15,7 @@ const BoxBuyOpen = ({
   loading,
   isWaiting,
   actionPopup,
-}: Props) => {
+}: BoxBuyOpenType) => {
   const handleChangeNumberBox = (numberPlus: number) => {
     const numberBoxPlus = numberBox + numberPlus;
     if (isOpen && numberBox >= data?.purchased && numberPlus > 0) return;
@@ -77,9 +66,11 @@ const BoxBuyOpen = ({
         <p className="text-[12px] text-[#0A1E42] leading-[19px] font-[600]">
           {isOpen
             ? getBoxesText(data?.purchased)
-            : `${typeof data?.price === "number" ? data?.price : "_"} ${
-                data?.sylbol ? data?.sylbol : "_"
-              }`}
+            : `${
+                typeof data?.price === "number"
+                  ? getNumberFormatUs(data?.price)
+                  : "_"
+              } ${data?.sylbol ? data?.sylbol : "_"}`}
         </p>
       </div>
       <div className="flex justify-between mt-[14px]">
@@ -101,7 +92,9 @@ const BoxBuyOpen = ({
             />
           )}
           {isOpen
-            ? `${data?.opened}/${getBoxesText(data?.purchased)}`
+            ? `${getNumberFormatUs(data?.opened)}/${getBoxesText(
+                data?.purchased
+              )}`
             : `${data?.token}`}
         </div>
       </div>
@@ -111,10 +104,7 @@ const BoxBuyOpen = ({
         </p>
         <div className="flex items-center gap-[2px] p-[4px] border-[1px] bg-[#F4F7FF] border-[#0A1E4233] rounded-[4px]">
           <button
-            className={clsx(
-              "w-[25px] h-[28px] bg-[#0A1E42] rounded-[4px] text-white leading-[25px] font-mono",
-              "disabled:opacity-50"
-            )}
+            className="btn-fill w-[25px] h-[28px] rounded-[4px] leading-[25px] font-mono"
             onClick={() => handleChangeNumberBox(-1)}
             disabled={
               isCannotOpenBox || (!isBoxOpen && typeof data?.price !== "number")
@@ -126,10 +116,7 @@ const BoxBuyOpen = ({
             {numberBox}
           </p>
           <button
-            className={clsx(
-              "w-[25px] h-[28px] bg-[#0A1E42] rounded-[4px] text-white leading-[25px] font-mono",
-              "disabled:opacity-50"
-            )}
+            className="btn-fill w-[25px] h-[28px] rounded-[4px] leading-[25px] font-mono"
             onClick={() => handleChangeNumberBox(1)}
             disabled={
               isCannotOpenBox || (!isBoxOpen && typeof data?.price !== "number")
@@ -139,10 +126,7 @@ const BoxBuyOpen = ({
           </button>
           {isOpen && (
             <button
-              className={clsx(
-                "w-[45px] h-[28px] bg-[#0A1E42] rounded-[4px] text-white leading-[25px] font-mono",
-                "disabled:opacity-50"
-              )}
+              className="btn-fill w-[45px] h-[28px] rounded-[4px] leading-[25px] font-mono"
               onClick={() => handleChangeNumberBoxMax()}
               disabled={isCannotOpenBox}
             >
@@ -162,13 +146,15 @@ const BoxBuyOpen = ({
             Total amount
           </p>
           <p className="text-[12px] text-[#0A1E42] leading-[19px] font-[600]">
-            {`${totalAmount} ${data?.sylbol ? data?.sylbol : "_"}`}
+            {`${getNumberFormatUs(totalAmount)} ${
+              data?.sylbol ? data?.sylbol : "_"
+            }`}
           </p>
         </div>
       )}
       <button
         className={clsx(
-          "w-full h-[40px] mt-[12px] text-white text-[14px] rounded-[4px] font-[600] bg-[#002464]",
+          "btn-fill w-full h-[40px] mt-[12px] text-[14px] rounded-[4px] font-[600]",
           "disabled:opacity-50"
         )}
         onClick={() => handleActionPopup()}
@@ -177,7 +163,7 @@ const BoxBuyOpen = ({
         }
       >
         {isWaiting
-          ? "waiting..."
+          ? "Waiting..."
           : isOpen
           ? loading
             ? "Loading..."

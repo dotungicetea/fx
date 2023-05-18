@@ -10,17 +10,8 @@ import { ToastContext } from "../context/toast-context";
 import BuyBoxModal from "../modals/buy-box-modal";
 import OpenBoxModal from "../modals/open-box-modal";
 import BoxBuyOpen from "./box-buy-open";
-
-interface Props {
-  boxSold: number;
-  totalBox: number;
-  boxNum: any;
-  reloadData: number;
-  setReloadData: any;
-  boxList: any[];
-  isAllBoxSold: any;
-  nextStage: any;
-}
+import { toastType } from "@/constants/context";
+import { LuckyBoxSoldType } from "@/types/lucky-box";
 
 const LuckyBoxSold = ({
   boxSold,
@@ -31,7 +22,8 @@ const LuckyBoxSold = ({
   isAllBoxSold,
   nextStage,
   boxList,
-}: Props) => {
+  setBoxList,
+}: LuckyBoxSoldType) => {
   const [isShowModalBuy, setIsShowModalBuy] = useState<boolean>(false);
   const [isShowModalOpen, setIsShowModalOpen] = useState<boolean>(false);
   const [numberBoxBuy, setNumberBoxBuy] = useState<number>(0);
@@ -151,11 +143,13 @@ const LuckyBoxSold = ({
         handleHideModalBuy();
         handleChangeNumberBoxBuy(0);
         setReloadData(reloadData + 1);
-        toast("Buy box successfully!!!", "success");
+        setBoxList(undefined);
+        toast("Buy box successfully!!!", toastType.SUCCESS);
       }
       setLoadingBoxBuy(false);
     } catch (error: any) {
       handleHideModalBuy();
+      handleChangeNumberBoxBuy(0);
       setLoadingBoxBuy(false);
       toast(`Something was wrong when buy box`, "error");
     }
@@ -169,7 +163,6 @@ const LuckyBoxSold = ({
       setLoadingBoxOpen(false);
       return;
     }
-    console.log("box list: ", boxList);
     const boxNumberOpenMap =
       numberBoxOpen > boxList?.length ? boxList?.length : numberBoxOpen;
     const boxListOpen = [...boxList].splice(0, boxNumberOpenMap);
@@ -186,10 +179,12 @@ const LuckyBoxSold = ({
           setReloadData(reloadData + 1);
           setBoxsOpen(result?.data?.cardArray);
           handleShowModalOpen();
-          toast("Open box success", "success");
+          handleChangeNumberBoxOpen(0);
+          toast("Open box successfully", toastType.SUCCESS);
         }
       } catch (e: any) {
         setLoadingBoxOpen(false);
+        handleChangeNumberBoxOpen(0);
         toast(e?.response?.data?.code || "", "error");
       }
     } else {
@@ -200,6 +195,7 @@ const LuckyBoxSold = ({
 
   return (
     <div>
+      <div className="open-box-loaded" />
       {isAllBoxSold ? (
         <div className="lg:flex flex-wrap gap-5 mt-[33px]">
           <div>

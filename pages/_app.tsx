@@ -15,9 +15,18 @@ import { ToastContextProvider } from "@/components/context/toast-context";
 import { NetworkContextProvider } from "@/components/context/network-context";
 import { bsc, bscTestnet } from "wagmi/chains";
 import { PROJECT_ID } from "@/hooks/use-contract";
+import { WalletContextProvider } from "@/components/context/wallet-context";
+
+var _bscTestnet = JSON.parse(JSON.stringify(bscTestnet));
+_bscTestnet.rpcUrls.default.http = [
+  "https://data-seed-prebsc-2-s2.binance.org:8545",
+];
+_bscTestnet.rpcUrls.public.http = [
+  "https://data-seed-prebsc-2-s2.binance.org:8545",
+];
 
 const { chains, provider } = configureChains(
-  [bscTestnet],
+  [_bscTestnet],
   [alchemyProvider({ apiKey: "" }), publicProvider()]
 );
 
@@ -65,7 +74,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <WagmiConfig client={client}>
       <ToastContextProvider>
         <NetworkContextProvider>
-          {getLayout(<Component {...pageProps} />)}
+          <WalletContextProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </WalletContextProvider>
         </NetworkContextProvider>
       </ToastContextProvider>
     </WagmiConfig>

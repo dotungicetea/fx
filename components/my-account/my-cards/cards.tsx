@@ -2,7 +2,13 @@ import CardNft from "@/components/custom/card-nft";
 import { nftCardTypes } from "@/constants/lucky-box";
 import { CardItemType } from "@/types/my-account-type";
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo } from "react";
+import { pathname } from "@/constants/nav";
+import { getNumberFormatUs } from "@/utils";
+import { convertDecimalToNum } from "@/utils/network";
+import { decryptOrder } from "@/utils/nft";
+import { getCurrentPrice } from "@/utils/market";
 
 const MyNftCard = ({ card, handleShowCard }: CardItemType) => {
   const baseMp = useMemo(() => {
@@ -27,14 +33,33 @@ const MyNftCard = ({ card, handleShowCard }: CardItemType) => {
     return isLegend || isEpic;
   }, [card?.rarity]);
 
+  // const isEndListingTime = useMemo(() => {
+  //   const now = new Date().getTime();
+  //   let distance = card?.expiration_time * 1000 - now;
+  //   if (distance <= 0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }, [card?.expiration_time]);
+
+  const getPrices = useMemo(() => {
+    // if (isEndListingTime) return 0;
+    const order_parameters_obj = decryptOrder(card?.order_parameters);
+    const currentPrice = getCurrentPrice({
+      order_parameters_obj: order_parameters_obj,
+    });
+    return currentPrice;
+  }, [card?.order_parameters]);
+
   return (
-    <div className="relative card_nft card-in-my-card w-[164px] h-[250px] rounded-[8px] overflow-hidden">
+    <div className="relative card_nft w-[164px] max-w-full h-[250px] rounded-[8px] overflow-hidden">
       <CardNft
-        src={card?.image}
         classNameOut="w-full h-full"
         className="w-full h-full cursor-pointer"
         baseMp={baseMp}
         level={level}
+        prices={getPrices}
         rarity={card?.rarity}
         symbol={card?.symbol}
       />
@@ -72,15 +97,19 @@ const MyNftCard = ({ card, handleShowCard }: CardItemType) => {
             />
             Stake
           </button>
-          <button className="flex gap-1 items-center justify-center text-[12px] font-semibold py-2 rounded-[4px] w-full bg-[#1BA53A] text-white">
-            <Image
-              src="/images/icons/card_sell.svg"
-              width={16}
-              height={16}
-              alt="card sell"
-            />
-            Sell NFT
-          </button>
+          <Link
+            href={`${pathname.MYACCOUNT}${pathname.MYCARDS}/${card?.nft_id}`}
+          >
+            <button className="flex gap-1 items-center justify-center text-[12px] font-semibold py-2 rounded-[4px] w-full bg-[#1BA53A] text-white">
+              <Image
+                src="/images/icons/card_sell.svg"
+                width={16}
+                height={16}
+                alt="card sell"
+              />
+              Sell NFT
+            </button>
+          </Link>
         </div>
       </div>
     </div>

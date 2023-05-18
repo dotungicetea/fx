@@ -5,25 +5,22 @@ import Link from "next/link";
 
 const ButtonReadMore = ({ className }: any) => {
   return (
-    <Link
-      href={"https://docs.fxbox.io/fxbox-gamefi/lucky-fxbox"}
-      target={"_blank"}
-    >
-      <button
-        className={clsx(
-          "mt-5 flex items-center gap-[9px] text-[14px] leading-[19px] border-[1px] border-[#0A1E42] py-[8px] px-[12px] rounded-[60px] font-[600]",
-          className
-        )}
+    <div className={clsx("flex mt-5", className)}>
+      <Link
+        href={"https://docs.fxbox.io/fxbox-gamefi/lucky-fxbox"}
+        target={"_blank"}
       >
-        Read more{" "}
-        <Image
-          src="/images/icons/long_arrow_right.svg"
-          width={25}
-          height={10}
-          alt="long arrow right"
-        />
-      </button>
-    </Link>
+        <button className="flex items-center gap-[9px] text-[14px] leading-[19px] border-[1px] border-[#0A1E42] py-[8px] px-[12px] rounded-[60px] font-[600]">
+          Read more{" "}
+          <Image
+            src="/images/icons/long_arrow_right.svg"
+            width={25}
+            height={10}
+            alt="long arrow right"
+          />
+        </button>
+      </Link>
+    </div>
   );
 };
 

@@ -1,6 +1,5 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { SignMessageArgs, SignMessageResult } from "@wagmi/core";
-import { signMessageContent } from "@/constants/network";
 
 export const handleSignatureLogin = async (
   signMessage: (args: SignMessageArgs) => Promise<SignMessageResult>,
@@ -50,5 +49,16 @@ export const wei2Number = (num: number | any | string) => {
     }
   } catch (e) {
     return "0";
+  }
+};
+
+export const convertDecimalToNum = (num: number | string) => {
+  if (!num) return 0;
+  try {
+    const numConverted = typeof num === "string" ? num : num?.toString();
+    const balance = BigNumber.from(numConverted);
+    return Number(ethers.utils.formatEther(balance));
+  } catch (e) {
+    return 0;
   }
 };

@@ -3,6 +3,7 @@ import { pathname } from "@/constants/nav";
 import Image from "next/image";
 import Link from "next/link";
 import useMediaQuery from "../hooks/media-query";
+import { MyBoxType } from "@/types/my-account-type";
 
 const stages = [
   {
@@ -12,11 +13,7 @@ const stages = [
   },
 ];
 
-interface Props {
-  boxNum: any;
-}
-
-const MyBoxes = ({ boxNum }: Props) => {
+const MyBoxes = ({ boxNum }: MyBoxType) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const getRemainBoxes = (total: number | string, opened: number | string) => {
@@ -36,7 +33,7 @@ const MyBoxes = ({ boxNum }: Props) => {
   };
 
   return (
-    <div>
+    <div className="p-5">
       <div className="grid-cols-5 px-5 hidden lg:grid gap-[6px] text-[14px] opacity-60">
         <p>Stage</p>
         <p>Total boxes</p>

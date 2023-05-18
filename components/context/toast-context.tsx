@@ -36,7 +36,7 @@ export const ToastContextProvider = ({ children }: Props) => {
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed w-fit max-w-full px-5 top-[68px] right-0">
+      <div className="fixed z-[60] w-fit max-w-full px-5 top-[68px] right-0">
         {toastsShow?.map((item, index) => {
           return (
             <div

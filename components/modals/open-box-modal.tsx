@@ -1,7 +1,6 @@
 import { pathname } from "@/constants/nav";
 import { OpenBoxModalType } from "@/types/modal-type";
 import clsx from "clsx";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import CardNft from "../custom/card-nft";
@@ -9,7 +8,6 @@ import Modal from "../custom/modal-custom";
 
 const OpenBoxModal = ({
   isOpen,
-  numberBox,
   boxsOpen,
   handleHideModal,
 }: OpenBoxModalType) => {
@@ -17,7 +15,7 @@ const OpenBoxModal = ({
     useState<boolean>(false);
 
   const handleVideoEnded = () => {
-    if (isOpen && numberBox && numberBox > 0) {
+    if (isOpen && boxsOpen && boxsOpen?.length > 0) {
       if (document) {
         const listCard = document.getElementsByClassName("card-open") as any;
         if (listCard && listCard?.length === 0) return;
@@ -34,11 +32,11 @@ const OpenBoxModal = ({
               5
           }px)`;
           listCard[index].style.transform = `translate(-50%, 0) rotate(${
-            0 + (index - middleCardIndex) * (numberBox > 5 ? 10 : 20)
+            0 + (index - middleCardIndex) * (boxsOpen?.length > 5 ? 10 : 20)
           }deg) scale(1)`;
           listCard[index].style.transitionDelay = `${index * 0.1}s`;
         });
-        const delayTime = numberBox * 0.1 + 0.7;
+        const delayTime = boxsOpen?.length * 0.1 + 0.7;
         setTimeout(() => {
           setIsShowCurrencyCards(true);
         }, delayTime * 1000);
@@ -46,18 +44,22 @@ const OpenBoxModal = ({
     }
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        handleVideoEnded();
+      }, 5000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   return (
     <Modal isOpen={isOpen} isNormalModal={false} onClose={handleHideModal}>
       {!isShowCurrencyCards ? (
         <div className="relative z-10 select-none">
-          <video
-            autoPlay
-            muted
-            className="w-[400px] h-[400px]"
-            onEnded={() => handleVideoEnded()}
-          >
-            <source src="/videos/video_open_box.webm" />
-          </video>
+          <div className="open-box-animation" />
           <div>
             {boxsOpen &&
               boxsOpen.map((card: any, index) => {
@@ -67,7 +69,6 @@ const OpenBoxModal = ({
                     className="card-open bottom-[50%] left-[50%]"
                   >
                     <CardNft
-                      src={card?.image}
                       className="w-[120px] h-[180px]"
                       baseMp={card?.base_mp}
                       level={card?.level}
@@ -116,7 +117,6 @@ const OpenBoxModal = ({
                       return (
                         <CardNft
                           key={index}
-                          src={card?.image}
                           baseMp={card?.base_mp}
                           level={card?.level}
                           rarity={card?.rarity}
@@ -127,15 +127,10 @@ const OpenBoxModal = ({
                 </div>
                 <p className="text-[28px] font-[600] mt-5">Congratulation!</p>
                 <p className="text-[14px] opacity-80">
-                  {`You’ve opened ${numberBox} currency cards`}
+                  {`You’ve opened ${boxsOpen?.length} currency cards`}
                 </p>
                 <Link href={`${pathname?.MYACCOUNT}${pathname.MYCARDS}`}>
-                  <button
-                    className={clsx(
-                      "w-full max-w-[230px] h-[40px] mt-5 bg-[#0A1E42] rounded-[4px] text-[14px] text-white leading-[25px]",
-                      "disabled:opacity-50"
-                    )}
-                  >
+                  <button className="btn-fill w-full max-w-[230px] h-[40px] mt-5 rounded-[4px] text-[14px] leading-[25px]">
                     Go to My Card
                   </button>
                 </Link>

@@ -1,3 +1,5 @@
+import { dateRangeType } from "@/constants/my-account";
+
 export const compareTime = (firstDate: Date | null, lastDate: Date | null) => {
   if (!firstDate) return false;
   const firstDateToTime = firstDate.getTime();
@@ -12,8 +14,10 @@ export const formatTimeString = (date: Date) => {
   const dateGet = date.getDate();
   const hourGet = date.getHours();
   const minuteGet = date.getMinutes();
+  const secondGet = date.getSeconds();
   const hourSmall = hourGet < 10 ? "0" + hourGet : hourGet;
   const minuteSmall = minuteGet < 10 ? "0" + minuteGet : minuteGet;
+  const secondSmall = secondGet < 10 ? "0" + secondGet : secondGet;
   return (
     yearGet +
     "/" +
@@ -23,36 +27,71 @@ export const formatTimeString = (date: Date) => {
     " " +
     hourSmall +
     ":" +
-    minuteSmall
+    minuteSmall +
+    ":" +
+    secondSmall
   );
 };
 
-export const getUTCByString = (time: string) => {
-  const timeConvert = new Date(time);
-  const years = timeConvert.getUTCFullYear();
-  const months = timeConvert.getUTCMonth();
-  const days = timeConvert.getUTCDate();
-  const hours = timeConvert.getUTCHours();
-  const minutes = timeConvert.getUTCMinutes();
-  const seconds = timeConvert.getUTCSeconds();
+export const formatTimeStringAt = (date: Date, isSecond?: boolean) => {
+  const yearGet = date.getFullYear();
+  const dateGet = date.getDate();
+  const hourGet = date.getHours();
+  const minuteGet = date.getMinutes();
+  const secondGet = date.getSeconds();
+  const monthString = date.toLocaleString("default", { month: "long" });
+  var ampm = hourGet >= 12 ? "PM" : "AM";
+  return (
+    monthString +
+    " " +
+    dateGet +
+    "," +
+    yearGet +
+    " at " +
+    hourGet +
+    ":" +
+    minuteGet +
+    (isSecond ? ":" + secondGet : "") +
+    ` ${ampm}`
+  );
+};
+
+export const getUTCByDatetime = (date: Date) => {
+  const years = date.getUTCFullYear();
+  const months = date.getUTCMonth();
+  const days = date.getUTCDate();
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
   const timeUTC = new Date(
     Date.UTC(years, months, days, hours, minutes, seconds)
   );
   return timeUTC;
 };
 
-export const formatTimestampToDate = (timestamp: number, plusTime?: number) => {
+export const getUTCByString = (time: string) => {
+  const timeConvert = new Date(time);
+  const timeUTC = getUTCByDatetime(timeConvert);
+  return timeUTC;
+};
+
+export const formatTimestampToDate = (
+  timestamp: number,
+  plusTime?: number,
+  isAt?: boolean
+) => {
   if (!timestamp) return "_";
   const time = plusTime
     ? new Date((timestamp + plusTime) * 1000)
     : new Date(timestamp * 1000);
   if (!time) return "_";
-  return formatTimeString(time);
+  return isAt ? formatTimeStringAt(time) : formatTimeString(time);
 };
 
 export const formatTimestampToDateUTCString = (
   timestamp: number,
-  plusTime?: number
+  plusTime?: number,
+  isAt?: boolean
 ) => {
   if (!timestamp) return "_";
   const time = plusTime
@@ -61,7 +100,7 @@ export const formatTimestampToDateUTCString = (
   if (!time) return "_";
   const timeString = time.toString();
   const timeUTC = getUTCByString(timeString);
-  return formatTimeString(timeUTC);
+  return isAt ? formatTimeStringAt(timeUTC) : formatTimeString(timeUTC);
 };
 
 export const formatTimestampToDateUTC = (
@@ -126,4 +165,31 @@ export const formatTimeUTCString = (date: string | Date | any) => {
     ":" +
     secondGet
   );
+};
+
+export const getDatetimeBySelectDateRange = (key: string, date: Date) => {
+  switch (key) {
+    case dateRangeType.SEVENDAY:
+      return new Date(date.setDate(date.getDate() + 7));
+    case dateRangeType.FIFTEENDAY:
+      return new Date(date.setDate(date.getDate() + 15));
+    case dateRangeType.ONEMONTH:
+      return new Date(date.setMonth(date.getMonth() + 1));
+    case dateRangeType.TWOMONTH:
+      return new Date(date.setMonth(date.getMonth() + 2));
+    case dateRangeType.SIXMONTH:
+      return new Date(date.setMonth(date.getMonth() + 6));
+  }
+};
+
+export const getExpirationTimeOffer = (time: number) => {
+  const currentTime = new Date().getTime() / 1000;
+  const diffTime = time - currentTime;
+  if (diffTime < 0) return "--";
+  const day = Number.parseInt((diffTime / 86400)?.toString());
+  if (day > 0) return day > 1 ? `${day} days` : `${day} day`;
+  const hour = Number.parseInt((diffTime / 3600)?.toString());
+  if (hour > 0) return hour > 1 ? `${hour} hours` : `${hour} hour`;
+  const minute = Number.parseInt((diffTime / 60)?.toString());
+  return minute > 1 ? `${minute} minutes` : `${minute} minute`;
 };

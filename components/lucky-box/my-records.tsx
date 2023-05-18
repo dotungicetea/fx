@@ -1,12 +1,11 @@
-import {
-  formatTimeString,
-  formatTimeType,
-  getUTCByString
-} from "@/utils/time";
+import { formatTimeType, getUTCByString } from "@/utils/time";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { pathname } from "@/constants/nav";
+import { MyRecordType } from "@/types/lucky-box";
+import MyCardLoading from "../loading/my-card-loading";
+import RecordLoading from "../loading/record-loading";
 
 const ButtonMyCard = ({ className }: any) => {
   return (
@@ -28,21 +27,17 @@ const ButtonMyCard = ({ className }: any) => {
   );
 };
 
-interface Props {
-  myNftList: any[];
-}
-
-const MyRecords = ({ myNftList }: Props) => {
+const MyRecords = ({ myNftList, loading }: MyRecordType) => {
   const getTimeRecords = (time: string) => {
     if (!time) return "0000-00-00 00:00:00";
     const timeUTC = getUTCByString(time);
-     const timeFormatResult = formatTimeType(timeUTC, true);
+    const timeFormatResult = formatTimeType(timeUTC, true);
     return timeFormatResult;
   };
 
   return (
     <div>
-      {myNftList && !!myNftList?.length ? (
+      {(myNftList && !!myNftList?.length) || loading ? (
         <div>
           <div className="hidden lg:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[6px] text-[14px] opacity-60">
             <p>Time</p>
@@ -50,60 +45,61 @@ const MyRecords = ({ myNftList }: Props) => {
             <p>Results</p>
             <p></p>
           </div>
-          {myNftList?.map((record, index) => {
-            return (
-              <div
-                key={index}
-                className={clsx(
-                  "grid grid-cols-[1fr_100px] gap-x-[6px] gap-y-[12px] items-center px-5 py-[6px] bg-white rounded-[6px] mt-[6px]",
-                  "lg:grid-cols-3 xl:grid-cols-4 lg:gap-[6px]"
-                )}
-              >
-                <div>
-                  <p className="text-[14px] opacity-60 lg:hidden">Time</p>
-                  <div className="flex items-center gap-[6px] text-[14px] text-[#2152CB] font-[600]">
-                    {getTimeRecords(record[0]?.updated_at)}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[14px] opacity-60 lg:hidden">Opened</p>
-                  <div className="text-[14px] font-[600]">{record?.length}</div>
-                </div>
-                <div>
-                  <p className="text-[14px] opacity-60 lg:hidden">Results</p>
-                  <div className="flex justify-between items-center">
-                    <div className="relative w-[160px] h-[48px]">
-                      {record?.map((item: any, index: number) => {
-                        if (record?.length > 5 && index >= 5) return null;
-                        return (
-                          <Image
-                            key={index}
-                            className={`absolute top-0 border-[1px] border-white rounded-[2px]`}
-                            style={{ left: `${index * 20}px` }}
-                            src={item?.image}
-                            width={31}
-                            height={48}
-                            alt="card"
-                          />
-                        );
-                      })}
-                      {record?.length > 5 && (
-                        <div className="absolute w-[36px] h-[36px] flex items-center justify-center mt-[6px] text-[12px] left-[100px] bg-white rounded-[50%]">
-                          {`+${record?.length - 5}`}
+          {loading ? (
+            <RecordLoading />
+          ) : (
+            <>
+              {myNftList?.map((record, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={clsx(
+                      "grid grid-cols-[1fr_100px] gap-x-[6px] gap-y-[12px] items-center px-5 py-[6px] bg-white rounded-[6px] mt-[6px]",
+                      "lg:grid-cols-3 xl:grid-cols-4 lg:gap-[6px]"
+                    )}
+                  >
+                    <div>
+                      <p className="text-[14px] opacity-60 lg:hidden">Time</p>
+                      <div className="flex items-center gap-[6px] text-[14px] text-[#2152CB] font-[600]">
+                        {getTimeRecords(record[0]?.updated_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[14px] opacity-60 lg:hidden">Opened</p>
+                      <div className="text-[14px] font-[600]">
+                        {record?.length}
+                      </div>
+                    </div>
+                    <div className="col-span-2 md:col-span-1">
+                      <p className="text-[14px] opacity-60 lg:hidden">
+                        Results
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <div className="relative w-[160px] h-[48px]">
+                          {record?.map((item: any, index: number) => {
+                            return (
+                              <Image
+                                key={index}
+                                className={`absolute top-0 border-[1px] border-white rounded-[2px]`}
+                                style={{ left: `${index * 20}px` }}
+                                src={item?.image}
+                                width={31}
+                                height={48}
+                                alt="card"
+                              />
+                            );
+                          })}
                         </div>
-                      )}
+                      </div>
                     </div>
                     <Link href={`${pathname?.MYACCOUNT}${pathname?.MYCARDS}`}>
-                      <ButtonMyCard className="hidden lg:flex" />
+                      <ButtonMyCard />
                     </Link>
                   </div>
-                </div>
-                <Link href={`${pathname?.MYACCOUNT}${pathname?.MYCARDS}`}>
-                  <ButtonMyCard className="lg:hidden" />
-                </Link>
-              </div>
-            );
-          })}
+                );
+              })}
+            </>
+          )}
         </div>
       ) : (
         <div className="text-center mt-[100px]">

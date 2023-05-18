@@ -1,4 +1,5 @@
 @import "./import.css";
+@import "./date-picker.scss";
 
 * {
   box-sizing: border-box;
@@ -39,24 +40,64 @@ button {
 }
 
 .guest-portal-page {
-  padding: 88px 20px 20px;
+  padding: 60px 0 0;
 }
 
-@media (max-width: 420px) {
-  .list-card {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    flex-wrap: nowrap;
+.my-card-filter {
+  height: 100%;
+  padding-right: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
-    .card-in-my-card {
-      width: 100%;
-    }
+* {
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #001D50;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #001943;
+  }
+}
+
+.no-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-bg-white {
+  &::-webkit-scrollbar-track {
+    background: #E4E8F0;
   }
 }
 
 @media (min-width: 1024px) {
   .guest-portal-page {
-    padding: 0 20px 12px 270px;
+    padding: 60px 0 0 200px;
+  }
+
+  .my-card-filter {
+    height: calc(100vh - 240px);
+  }
+
+  .my-card-list {
+    height: calc(100vh - 166px);
+    overflow: hidden;
   }
 }
 
@@ -81,7 +122,7 @@ button {
 
 @media (min-width: 1280px) {
   .guest-portal-page {
-    padding: 0 60px 12px 302px;
+    padding: 60px 0px 0 200px;
   }
 }
 
@@ -162,37 +203,6 @@ button {
   }
 }
 
-input[type="checkbox"] {
-  appearance: none;
-  background-color: #fff;
-  font: inherit;
-  color: currentColor;
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid rgba($color: #000000, $alpha: 0.2);
-  border-radius: 5px;
-  transform: translateY(-0.075em);
-  display: grid;
-  place-content: center;
-}
-
-input[type="checkbox"]::before {
-  font-family: FontAwesome;
-  content: "\f00c";
-  width: -0.35em;
-  height: -0.35em;
-  transform: scale(0);
-  transition: 120ms transform ease-in-out;
-}
-
-input[type="checkbox"]:checked {
-  border: 1.5px solid rgba($color: #000000, $alpha: 1);
-}
-
-input[type="checkbox"]:checked::before {
-  transform: scale(1);
-}
-
 .card_nft:hover {
   .card_nft_item {
     display: flex;
@@ -235,5 +245,196 @@ input[type="checkbox"]:checked::before {
     width: fit-content;
     opacity: 0;
     transform: translateX(100px);
+  }
+}
+
+.open-box-animation {
+  background: url("/videos/open-box.png") no-repeat;
+  background-position: right;
+  width: 360px;
+  height: 360px;
+  transition: background-position 5s steps(74);
+  animation: logo-animate 5s steps(74) forwards;
+}
+
+.open-box-loaded {
+  background: url("/videos/open-box.png") no-repeat;
+  width: 0;
+  height: 0;
+}
+
+@keyframes logo-animate {
+  0% {
+    background-position: left;
+  }
+
+  100% {
+    background-position: right;
+  }
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  background-color: #fff;
+  font: inherit;
+  color: currentColor;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  border: 1px solid rgba($color: #000000, $alpha: 0.2);
+  border-radius: 5px;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "✔";
+  width: 12px;
+  height: 22px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+}
+
+input[type="checkbox"]:checked {
+  border: 1px solid rgba($color: #000000, $alpha: 1);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(0.7);
+}
+
+input[type="radio"] {
+  appearance: none;
+  background-color: #fff;
+  font: inherit;
+  color: currentColor;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  border: 1px solid rgba($color: #000000, $alpha: 0.2);
+  border-radius: 50%;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type="radio"]::before {
+  font-family: FontAwesome;
+  content: "";
+  width: 8px;
+  height: 8px;
+  transform: scale(0);
+  background: #002464;
+  border-radius: 50%;
+  transition: 120ms transform ease-in-out;
+}
+
+input[type="radio"]:checked {
+  border: 1px solid rgba($color: #000000, $alpha: 1);
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+select {
+  position: relative;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url('/images/icons/arrow_down_60.svg');
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 12px);
+  background-position-y: calc(50%);
+  padding: 9px 40px 9px 12px;
+  border-radius: 6px;
+  background-color: #F4F7FF;
+  border: none;
+  outline: none;
+}
+
+.search {
+  position: relative;
+
+  input {
+    border-radius: 6px;
+    border: none;
+    outline: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: calc(50% - 8px);
+    right: 12px;
+    background: url('/images/icons/search.svg');
+  }
+
+  &-sm::before {
+    width: 10px;
+    height: 10px;
+    top: calc(50% - 5px);
+    background-size: 100% 100%;
+  }
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background: none;
+}
+
+input[type=time]::-webkit-datetime-edit-ampm-field {
+  display: none;
+}
+
+.btn-fill {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #002464;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-line {
+  border: 1px solid #002464;
+  background: transparent;
+  color: #0A1E42;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-cancel {
+  background: linear-gradient(180deg, #EA5D5D 0%, #DD5A5A 100%);
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-accept {
+  background: #5FC08E;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.5;
   }
 }

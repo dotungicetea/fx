@@ -11,6 +11,11 @@ export const BUSD_CONTRACT = process?.env?.NEXT_PUBLIC_TOKEN_ADDRESS || "";
 export const FX_NFT_CONTRACT = process?.env?.NEXT_PUBLIC_FX_NFT || "";
 export const NFT_CONTRACT_VIEW = process?.env?.NEXT_PUBLIC_NFT_CONTRACT || "";
 export const PROJECT_ID = process?.env?.NEXT_PUBLIC_PROJECT_ID || "";
+export const HASK_KEY = process?.env?.NEXT_PUBLIC_HASH_KEY || "";
+export const MARKET_CONTRACT = process?.env?.NEXT_PUBLIC_MARKET_CONTRACT || "";
+export const FEE_RECIPIENT = process?.env?.NEXT_PUBLIC_FEE_RECIPIENT || "";
+export const TRANSACTION_HASH =
+  process?.env?.NEXT_PUBLIC_TRANSACTION_HASH || "";
 
 interface Returns {
   fxBoxContract: FxBoxBox | undefined;

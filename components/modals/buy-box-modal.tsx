@@ -1,5 +1,5 @@
 import { BuyBoxModalType } from "@/types/modal-type";
-import { getBoxesText } from "@/utils";
+import { getBoxesText, getNumberFormatUs } from "@/utils";
 import { useMemo } from "react";
 import Modal from "../custom/modal-custom";
 
@@ -38,7 +38,11 @@ const BuyBoxModal = ({
               Price per box
             </p>
             <p className="text-[16px] font-[600] leading-[22px] text-right">
-              {`${data?.price} ${data?.sylbol}`}
+              {`${
+                typeof data?.price === "number"
+                  ? getNumberFormatUs(data?.price)
+                  : "_"
+              } ${data?.sylbol || "_"}`}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-5">
@@ -46,19 +50,23 @@ const BuyBoxModal = ({
               Total amount
             </p>
             <p className="text-[16px] font-[600] leading-[22px] text-right">
-              {`${totalAmount} ${data?.sylbol}`}
+              {`${
+                typeof totalAmount === "number"
+                  ? getNumberFormatUs(totalAmount)
+                  : "_"
+              } ${data?.sylbol || "_"}`}
             </p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-5">
           <button
-            className="h-[40px] border-[1px] border-[#002464] rounded-[4px] text-[14px]"
+            className="h-[40px] btn-line rounded-[4px] text-[14px]"
             onClick={() => handleHideModal()}
           >
             Cancel
           </button>
           <button
-            className="h-[40px] bg-[#002464] rounded-[4px] text-[14px] text-white disabled:opacity-50"
+            className="btn-fill h-[40px] rounded-[4px] text-[14px] disabled:opacity-50"
             disabled={loading}
             onClick={() => handleBuyBox()}
           >

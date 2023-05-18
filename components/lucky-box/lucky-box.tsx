@@ -23,6 +23,7 @@ const LuckyBoxPage = () => {
   const { address, isConnected } = useAccount();
   const [reloadData, setReloadData] = useState<number>(0);
   const [nftList, setNftList] = useState<any[]>([]);
+  const [loadingRecord, setLoadingRecord] = useState<boolean>(true);
   const { signature } = useContext(NetworkContext);
 
   const handleGetTotalBoxList = async () => {
@@ -31,9 +32,7 @@ const LuckyBoxPage = () => {
       if (result && result?.data) {
         setTotalBoxList(result.data);
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -50,12 +49,11 @@ const LuckyBoxPage = () => {
         if (result && result?.data) {
           setBoxList(result.data);
         }
+      } else {
+        setBoxList([]);
       }
-      // else {
-      //   setBoxList([]);
-      // }
     } catch (err) {
-      console.error(err);
+      setBoxList([]);
     }
   };
 
@@ -72,15 +70,13 @@ const LuckyBoxPage = () => {
       } else {
         setBoxNum({});
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   };
 
   const handleGetNftList = async (user: any) => {
     try {
       const nfts = await getNftList({
-        wallet_address: address,
+        wallet_address: address || "",
         signature: user?.signature,
       });
       if (nfts?.data && nfts?.data?.length) {
@@ -88,37 +84,44 @@ const LuckyBoxPage = () => {
         const nftListData = [] as any[];
         listData?.forEach((data: any) => {
           const indexTimeExist = nftListData?.findIndex((dataExist: any) => {
-            return dataExist[0]?.updated_at === data?.updated_at;
+            return dataExist[0]?.updated_at === data?.nft_item?.updated_at;
           });
           if (indexTimeExist >= 0) {
-            nftListData[indexTimeExist].push(data);
+            nftListData[indexTimeExist].push(data?.nft_item);
           } else {
-            nftListData.push([data]);
+            nftListData.push([data?.nft_item]);
           }
         });
         setNftList(nftListData);
+        setLoadingRecord(false);
       } else {
         setNftList([]);
+        setLoadingRecord(false);
       }
     } catch (err) {
       setNftList([]);
-      console.error(err);
+      setLoadingRecord(false);
     }
   };
 
   useEffect(() => {
     const user = getUserFromLocal();
-    handleGetBoxList(user);
-    handleGetBoxNum(user);
-    handleGetNftList(user);
+    if (user && address) {
+      handleGetBoxList(user);
+      handleGetBoxNum(user);
+      handleGetNftList(user);
+    } else {
+      setBoxList([]);
+    }
   }, [address, reloadData, isConnected, signature]);
 
   return (
-    <div>
+    <div className="px-5 xl:px-10 pb-5 pt-4">
       <div className="lg:grid lg:grid-cols-2 md:gap-3 xl:gap-[28px]">
         <LuckyBoxTypes />
         <LuckyBoxStage
           boxList={boxList}
+          setBoxList={setBoxList}
           boxNum={boxNum}
           reloadData={reloadData}
           setReloadData={setReloadData}
@@ -126,12 +129,13 @@ const LuckyBoxPage = () => {
         />
       </div>
       <Tab
+        lineClassName="mb-5"
         tabsContent={["Lucky Box Rules", "My Records"]}
         tabNumber={tab}
         handleChangeTab={setTab}
       />
       {tab === 0 && <LuckyBoxRule />}
-      {tab === 1 && <MyRecords myNftList={nftList} />}
+      {tab === 1 && <MyRecords myNftList={nftList} loading={loadingRecord} />}
     </div>
   );
 };

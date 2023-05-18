@@ -1,12 +1,9 @@
+import { CommingSoonType } from "@/types/global-type";
 import Image from "next/image";
 
-interface Props {
-  title: string;
-}
-
-const CommingSoon = ({ title }: Props) => {
+const CommingSoon = ({ title }: CommingSoonType) => {
   return (
-    <div>
+    <div className="px-5 xl:px-10">
       <h1 className="text-[28px] text-center lg:text-left lg:text-[32px] font-semibold">
         {title}
       </h1>

@@ -1,12 +1,10 @@
-import clsx from "clsx";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { NextStageCoundownType } from "@/types/lucky-box";
+import { useEffect, useRef } from "react";
 
-interface Props {
-  openBoxTime?: Date;
-  setIsCoundown: Dispatch<SetStateAction<boolean>>;
-}
-
-const LuckyBoxCoundown = ({ openBoxTime, setIsCoundown }: Props) => {
+const LuckyBoxCoundown = ({
+  openBoxTime,
+  setIsCoundown,
+}: NextStageCoundownType) => {
   const daysRef = useRef<any>();
   const hoursRef = useRef<any>();
   const minutesRef = useRef<any>();

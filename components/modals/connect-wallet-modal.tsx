@@ -11,7 +11,6 @@ import { userRegister } from "@/services/user-service";
 import { useContext } from "react";
 import { ToastContext } from "../context/toast-context";
 import { toastType } from "@/constants/context";
-import { useSignMessage } from "wagmi";
 import { NetworkContext } from "../context/network-context";
 
 const ConnectWalletModal = ({
@@ -50,9 +49,7 @@ const ConnectWalletModal = ({
           signature: signature,
         });
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   };
 
   return (

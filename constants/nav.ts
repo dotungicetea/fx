@@ -14,6 +14,8 @@ export const pathname = {
   MYPROFILE: "/my-profile",
   MYCARDS: "/my-cards",
   MYTRANSACTIONS: "/my-transactions",
+  ACTIVITIES: "/activities",
+  NFT: "/nft",
 };
 
 export const navbarItemsMain = [
@@ -105,3 +107,12 @@ export const navbarItemsMain = [
     ],
   },
 ];
+
+export const nftActivity = {
+  LISTING: "Listing",
+  CANCEL_LISTING: "Cancel List",
+  CANCEL_OFFER: "Cancel Offer",
+  TAKE_OFFER: "Accept Offer",
+  BUY: "Buy",
+  OFFER: "Offer",
+};

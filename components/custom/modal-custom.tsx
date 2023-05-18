@@ -18,9 +18,7 @@ const Modal = ({
         } else {
           document.body.style.overflow = "";
         }
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
     }
   }, [isOpen, children]);
 
@@ -44,7 +42,7 @@ const Modal = ({
         onClick={() => handleClose()}
       />
       {isNormalModal ? (
-        <div className="relative max-w-full z-60 top-0 left-0 w-fit h-full">
+        <div className="relative max-w-full z-60 top-0 left-0 w-fit max-h-full h-fit">
           <div className="relative bg-white rounded-lg">
             <ButtonCross handleClose={handleClose} />
             <div className="px-6 pt-10 pb-6 text-center">{children}</div>

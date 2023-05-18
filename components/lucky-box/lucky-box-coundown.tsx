@@ -1,13 +1,13 @@
+import { LuckyBoxCoundownType } from "@/types/lucky-box";
+import { getBoxesText } from "@/utils";
 import clsx from "clsx";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-interface Props {
-  totalBox: number;
-  openBoxTime?: Date;
-  setIsCoundown: Dispatch<SetStateAction<boolean>>;
-}
-
-const LuckyBoxCoundown = ({ totalBox, openBoxTime, setIsCoundown }: Props) => {
+const LuckyBoxCoundown = ({
+  totalBox,
+  openBoxTime,
+  setIsCoundown,
+}: LuckyBoxCoundownType) => {
   const daysRef = useRef<any>();
   const hoursRef = useRef<any>();
   const minutesRef = useRef<any>();
@@ -55,7 +55,9 @@ const LuckyBoxCoundown = ({ totalBox, openBoxTime, setIsCoundown }: Props) => {
         )}
       >
         <p className="text-[12px] text-white">Total</p>
-        <p className="text-[18px] mt-[6px] whitespace-nowrap text-white">{`$${totalBox} boxes`}</p>
+        <p className="text-[18px] mt-[6px] whitespace-nowrap text-white">
+          {getBoxesText(totalBox)}
+        </p>
       </div>
       <div
         className={clsx(

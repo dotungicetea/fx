@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import LuckyBoxCoundown from "./lucky-box-coundown";
 import LuckyBoxSold from "./lucky-box-sold";
+import { LuckyBoxStageType } from "@/types/lucky-box";
 
 const currentStage = {
   title: "Stage 1",
@@ -20,21 +21,14 @@ const afterNextStage = {
   openBoxTime: new Date(Date.UTC(2024, 6, 2, 8, 2, 10)),
 };
 
-interface Props {
-  totalBoxList: any;
-  boxNum: any;
-  reloadData: number;
-  setReloadData: any;
-  boxList: any[];
-}
-
 const LuckyBoxStage = ({
   totalBoxList,
   boxNum,
   reloadData,
   setReloadData,
   boxList,
-}: Props) => {
+  setBoxList,
+}: LuckyBoxStageType) => {
   const [isCoundown, setIsCoundown] = useState<boolean>(true);
   const [stages, setStages] = useState<any>({
     currentStage: currentStage,
@@ -98,6 +92,7 @@ const LuckyBoxStage = ({
           reloadData={reloadData}
           setReloadData={setReloadData}
           boxList={boxList}
+          setBoxList={setBoxList}
           isAllBoxSold={isAllBoxSold}
           nextStage={stages?.nextStage}
         />

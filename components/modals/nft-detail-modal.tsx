@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getNftDetail } from "@/services/nft-service";
 import { NftDetailModalType } from "@/types/modal-type";
-import { formatTimestampToDateUTC, formatTimeType } from "@/utils/time";
 import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { ToastContext } from "../context/toast-context";
@@ -10,6 +9,7 @@ import Modal from "../custom/modal-custom";
 import { nftCardTypes } from "@/constants/lucky-box";
 import Link from "next/link";
 import { NFT_CONTRACT_VIEW } from "@/hooks/use-contract";
+import { getNftDetailData } from "@/utils/nft";
 
 const NftDetailModal = ({
   isOpen,
@@ -18,14 +18,6 @@ const NftDetailModal = ({
 }: NftDetailModalType) => {
   const [nft, setNft] = useState<any>();
   const { toast } = useContext(ToastContext);
-
-  const getTimeMinted = (time: number | Date) => {
-    if (!time) return "0000-00-00 00:00:00";
-    const timeConvertDate =
-      typeof time === "number" ? formatTimestampToDateUTC(time) : time;
-    const timeFormat = formatTimeType(timeConvertDate, true);
-    return timeFormat;
-  };
 
   const isShowUpdate = useMemo(() => {
     const isLegend =
@@ -40,30 +32,11 @@ const NftDetailModal = ({
       try {
         const result = await getNftDetail(id);
         if (result && result?.data) {
-          const data = {} as any;
-          const rarity = result.data?.attributes?.find(
-            (att: any) => att?.trait_type === "Rarity"
-          )?.value;
-          const mp = result.data?.attributes?.find(
-            (att: any) => att?.trait_type === "MP"
-          )?.value;
-          const level = result.data?.attributes?.find(
-            (att: any) => att?.trait_type === "Level"
-          )?.value;
-          const symbol = result.data?.attributes?.find(
-            (att: any) => att?.trait_type === "Symbol"
-          )?.value;
-          data.image = result.data?.image;
-          data.rarity = rarity;
-          data.bmp = mp;
-          data.mp = mp;
-          data.level = level;
-          data.id = id;
-          data.symbol = symbol;
-          data.minted = result?.data?.open_time
-            ? getTimeMinted(result?.data?.open_time)
-            : "_";
-          data.status = "Mining";
+          const data = getNftDetailData(
+            result?.data?.nftMetadata,
+            id,
+            result?.data?.tokenOwner
+          );
           setNft(data);
         }
       } catch (e) {
@@ -90,9 +63,8 @@ const NftDetailModal = ({
         style={{ width: "calc(90vw - 50px)" }}
         className="md:w-[100vw] max-w-[410px]"
       >
-        <div className="w-[180px] h-[274px] mx-auto">
+        <div className="w-fit mx-auto">
           <CardNft
-            src={nft?.image || ""}
             className="w-[180px] h-[274px]"
             baseMp={nft?.bmp || ""}
             level={nft?.level || ""}
@@ -117,7 +89,22 @@ const NftDetailModal = ({
         <div className="flex flex-col gap-3 bg-[#F4F7FF] mt-[12px] px-[28px] py-5 rounded-[9px]">
           <div className="flex justify-between items-center">
             <p className="text-[14px] leading-[22px] opacity-60">Token ID</p>
-            <Link href={`${NFT_CONTRACT_VIEW}?a=${nft?.id}`} target={"_blank"}>
+            {nft?.id ? (
+              <Link
+                href={`${NFT_CONTRACT_VIEW}?a=${nft?.id}`}
+                target={"_blank"}
+              >
+                <p className="flex items-center gap-[6px] font-semibold text-[16px] leading-[22px] text-[#2152CB]">
+                  {nft?.id ? nft?.id : "_"}
+                  <Image
+                    src="/images/icons/icon_open.svg"
+                    width={15}
+                    height={15}
+                    alt="icon open"
+                  />
+                </p>
+              </Link>
+            ) : (
               <p className="flex items-center gap-[6px] font-semibold text-[16px] leading-[22px] text-[#2152CB]">
                 {nft?.id ? nft?.id : "_"}
                 <Image
@@ -127,7 +114,7 @@ const NftDetailModal = ({
                   alt="icon open"
                 />
               </p>
-            </Link>
+            )}
           </div>
 
           <div className="flex justify-between items-center">
