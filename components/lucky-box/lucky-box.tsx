@@ -14,6 +14,7 @@ import LuckyBoxRule from "./lucky-box-rule";
 import LuckyBoxStage from "./lucky-box-stage";
 import LuckyBoxTypes from "./lucky-box-types";
 import MyRecords from "./my-records";
+import CardNft from "../custom/card-nft";
 
 const LuckyBoxPage = () => {
   const [tab, setTab] = useState<number>(0);
@@ -117,6 +118,14 @@ const LuckyBoxPage = () => {
 
   return (
     <div className="px-5 xl:px-10 pb-5 pt-4">
+      <CardNft
+        classNameOut="w-full h-full"
+        className="w-full h-full"
+        baseMp={0}
+        level={0}
+        rarity={"epic"}
+        symbol={"usd"}
+      />
       <div className="lg:grid lg:grid-cols-2 md:gap-3 xl:gap-[28px]">
         <LuckyBoxTypes />
         <LuckyBoxStage
